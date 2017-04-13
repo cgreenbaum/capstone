@@ -1,3 +1,6 @@
+#define CALIBRATION 59.55 // millimeters
+#define READS 80
+
 float readDistance() {
   static float distance, accumulator;
 
@@ -8,7 +11,7 @@ float readDistance() {
   }
 
   distance = accumulator / READS;
-  if(SENSORSTATS) {
+  if(PRINTDIAGNOSTICS & SENSORSTATS) {
     Serial.print("D: ");
     Serial.print(distance);
     Serial.print(" ");

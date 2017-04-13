@@ -1,3 +1,17 @@
+#define LEVITATION_TARGET   49.0  // 44.0mm   // 50.0
+
+#define SAMPLEFREQ 120.0
+
+#define MEMORY        2.0         // 2.0   // 3.0 
+#define THRESHOLD     0.25
+#define DELTA         0.15
+#define CONTROLBIAS   33
+
+#define Kp  -1.0                  // 10    // 7.0
+#define Ki  -5.0                  // 20   // 14.0
+#define Kd  -10.0                 // 40   // 28.0
+
+
 float controller(float distance) {
   static float  lastDistance = 0;
   static float  integrator = 0;
@@ -24,7 +38,7 @@ float controller(float distance) {
 
   controlvalue = dutyKp + dutyKi + dutyKd + CONTROLBIAS;
 
-  if(PIDSTATS) {
+  if(PRINTDIAGNOSTICS & PIDSTATS) {
     Serial.print("dH: ");
     Serial.print(distance - LEVITATION_TARGET);
     Serial.print(" ");
