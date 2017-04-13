@@ -8,21 +8,17 @@
 #define ATTRACT HIGH
 #define READS 80
 
-#define LEVITATION_TARGET 45.0 // 44.0mm   // 50.0
+#define LEVITATION_TARGET 49.0 // 44.0mm   // 50.0
 #define SAMPLEFREQ 120.0
 #define MEMORY 2.0  // 2.0   // 3.0 
 #define THRESHOLD 0.25
 #define DELTA 0.15
-#define BIAS 0
+#define BIAS 33
 
-#define Kp -35.0     // 10    // 7.0
-#define Ki -35.0     // 20   // 14.0
-#define Kd -35.0     // 40   // 28.0
+#define Kp -1.0     // 10    // 7.0
+#define Ki -5.0     // 20   // 14.0
+#define Kd -10.0     // 40   // 28.0
 
-#define KpSTART 8
-#define KpMAX 30
-#define KdSTART 20
-#define KdMAX 60
 
 void setup() {
   // put your setup code here, to run once:
@@ -35,13 +31,14 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  static long duty = 0;
+  static long levPower = 0;
   static float distance = 0;
   static float lastDistance = 0;
   static float integrator = 0;
   static float dutyKp, dutyKi, dutyKd;
   static bool flipflop = false;
   static float accumulator = 0;
+  static float hError = 0;
   static long i = 0;
 
   digitalWrite(TOGGLE, HIGH);
@@ -52,9 +49,14 @@ void loop() {
   flipflop = !flipflop;
   digitalWrite(TOGGLE, LOW);
 
-  dutyKp   = (distance - LEVITATION_TARGET)*Kp;
+  if(distance > LEVITATION_TARGET)
+    hError =  pow((distance - LEVITATION_TARGET), 2);
+  else  
+    hError = -pow((distance - LEVITATION_TARGET), 2);
+
+  dutyKp   = hError*Kp;
   dutyKd   = (distance - lastDistance)*Kd;
-  integrator += (distance - LEVITATION_TARGET)/SAMPLEFREQ;
+  integrator += hError/SAMPLEFREQ;
 
   if(integrator > MEMORY)
     integrator = MEMORY;
@@ -63,20 +65,22 @@ void loop() {
   
   dutyKi  = integrator*Ki;
 
-
+/*
   if((distance - LEVITATION_TARGET) < -THRESHOLD)
     accumulator += DELTA;
   else if((distance - LEVITATION_TARGET) > THRESHOLD)
     accumulator -= DELTA;
 
+
   if(accumulator > 255)
     accumulator = 255;
   else if(accumulator < -255)
     accumulator = -255;
+*/
 
-  duty = dutyKp + dutyKi + dutyKd + accumulator;
+  levPower = dutyKp + dutyKi + dutyKd + BIAS;
 
-  electromagnet(powerLookup(duty));
+  electromagnet(powerLookup(levPower));
 
   Serial.print(distance - LEVITATION_TARGET);
   Serial.print(" ");

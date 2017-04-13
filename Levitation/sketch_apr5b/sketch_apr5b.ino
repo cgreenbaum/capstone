@@ -14,8 +14,8 @@
 #define THRESHOLD 0.5
 #define DELTA 15
 #define BIAS 180
-#define THRESHLIFT 1.0
-#define LEVTESTSTART 255
+#define THRESHLIFT 2.0
+#define LEVTESTSTART 100
 
 #define Kp 40.0
 #define Ki 20.0
@@ -43,6 +43,8 @@ void loop() {
   electromagnet(255);
 
   Serial.print("neutralBduty: ");
+  Serial.println(powerLookup(neutralBduty));
+  Serial.print("neutralBlevpower: ");
   Serial.println(neutralBduty);
   delay(10000);
 }
@@ -56,11 +58,11 @@ int liftoff() {
 
   originalDistance = readDistance();
 
-  while( (readDistance() - originalDistance) < THRESHLIFT ) {
-    electromagnet(--levPower);
+  while( (originalDistance - readDistance()) < THRESHLIFT ) {
+    electromagnet(powerLookup(--levPower));
     delay(50);
 
-    if(levPower < -255) {
+    if(levPower < -100) {
       levPower = 6969;
       break;
     }
@@ -111,4 +113,20 @@ float readDistance() {
 //  distance = CALIBRATION / (5.0/1024.0*analogRead(POSA));
 
   return distance;
+}
+
+int powerLookup(float powerSetting)
+{
+  static int duty;
+  static unsigned int index;
+  const static int iLookup[201] = { -255, -254, -252, -251, -250, -249, -247, -246, -245, -244, -243, -242, -241, -239, -238, -237, -236, -234, -233, -232, -231, -229, -228, -227, -226, -225, -223, -222, -221, -219, -218, -217, -216, -214, -213, -212, -210, -209, -208, -207, -206, -204, -203, -202, -200, -199, -198, -197, -195, -194, -193, -192, -190, -189, -188, -187, -185, -184, -183, -182, -180, -179, -178, -176, -175, -174, -173, -171, -170, -169, -168, -166, -165, -164, -163, -161, -160, -159, -157, -156, -154, -152, -150, -147, -144, -141, -137, -132, -128, -122, -117, -111, -104, -97, -88, -77, -67, -54, -42, -26, 0, 26, 42, 56, 71, 80, 88, 97, 106, 111, 118, 123, 128, 132, 137, 141, 143, 146, 149, 152, 153, 155, 157, 158, 159, 161, 162, 163, 164, 166, 167, 168, 169, 170, 172, 173, 174, 175, 176, 178, 179, 180, 181, 183, 184, 185, 186, 187, 189, 190, 191, 192, 194, 195, 196, 197, 199, 200, 201, 203, 204, 205, 206, 207, 209, 210, 211, 213, 214, 215, 216, 218, 219, 220, 221, 223, 224, 225, 227, 228, 229, 230, 232, 233, 234, 236, 237, 238, 240, 241, 242, 244, 245, 246, 247, 249, 250, 251, 253, 254, 255 };
+
+  if(powerSetting > 100)
+    powerSetting = 100;
+  else if(powerSetting < -100)
+    powerSetting = -100;
+
+  index = (100 + (int)powerSetting);
+
+  return duty = iLookup[index];
 }

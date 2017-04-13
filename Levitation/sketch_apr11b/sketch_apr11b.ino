@@ -12,7 +12,7 @@
 #define SAMPLEFREQ 120.0
 #define MEMORY 1.0  // 2.0   // 3.0 
 #define THRESHOLD 0.0
-#define DELTA 20
+#define DELTA 0.15
 #define BIAS 0
 
 #define Kp 35.0     // 10    // 7.0
@@ -35,7 +35,7 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  static long duty = 0;
+  static float duty = 0;
   static float distance = 0;
   static float lastDistance = 0;
   static float integrator = 0;
