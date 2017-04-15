@@ -1,21 +1,24 @@
-#define LEVITATION_TARGET   48.0  // 44.0mm   // 50.0
+#define LEVITATION_TARGET   50.0  // 44.0mm   // 50.0
 
-#define SAMPLEFREQ 120.0
+#define SAMPLEFREQ 300.0
 
-#define MEMORY        2.0         // 2.0   // 3.0 
+#define MEMORY        1.0         // 2.0   // 3.0 
 #define THRESHOLD     0.25
 #define DELTA         0.15
-#define CONTROLBIAS   -20
+#define CONTROLBIAS   adjust
 
-#define Kp  -10.0                  // 10    // 7.0
-#define Ki  -20.0                  // 20   // 14.0
-#define Kd  -40.0                 // 40   // 28.0
+#define KP  -12.0       // -12           
+#define KI  -25       // -15           
+#define KD  -53      // -150
 
+#define ADJUST_UPPER 0.0
+#define ADJUST_LOWER  -80.0
 
 float controller(float distance) {
   static float  lastDistance = 0;
   static float  integrator = 0;
   static float  dutyKp, dutyKi, dutyKd;
+  static float  Kp, Kd, Ki, bias, adjust = 0;
   static float  hError = 0;
   static float  controlvalue = 0;
   static long   levPower = 0;
@@ -25,6 +28,11 @@ float controller(float distance) {
   else  
     hError = -pow((distance - LEVITATION_TARGET), 2);
   */
+
+  bias = CONTROLBIAS;
+  Kp = KP;
+  Ki = KI;
+  Kd = KD;
 
   hError   = distance - LEVITATION_TARGET;
 
@@ -39,9 +47,23 @@ float controller(float distance) {
   
   dutyKi  = integrator*Ki;
 
-  controlvalue = dutyKp + dutyKi + dutyKd + CONTROLBIAS;
+  controlvalue = dutyKp + dutyKi + dutyKd + bias;
 
   if(PRINTDIAGNOSTICS & PIDSTATS) {
+    adjust = ADJUST_LOWER + (ADJUST_UPPER-ADJUST_LOWER)*(analogRead(1)/1024.0);
+    
+    Serial.print("Kp: ");
+    Serial.print(Kp);
+    Serial.print(" ");    
+    Serial.print("Ki: ");
+    Serial.print(Ki);
+    Serial.print(" ");    
+    Serial.print("Kd: ");
+    Serial.print(Kd);
+    Serial.print(" "); 
+    Serial.print("Bias: ");
+    Serial.print(bias);
+    Serial.print(" ");    
     Serial.print("dH: ");
     Serial.print(distance - LEVITATION_TARGET);
     Serial.print(" ");
