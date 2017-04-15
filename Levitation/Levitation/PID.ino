@@ -2,14 +2,14 @@
 
 #define SAMPLEFREQ 300.0
 
-#define MEMORY        1.0         // 2.0   // 3.0 
+#define MEMORY        100.0         // 2.0   // 3.0 
 #define THRESHOLD     0.25
 #define DELTA         0.15
-#define CONTROLBIAS   adjust
+#define CONTROLBIAS   -8.0
 
-#define KP  -12.0       // -12           
-#define KI  -25       // -15           
-#define KD  -53      // -150
+#define KP  00.0       // -12           
+#define KI  00.0       // -15           
+#define KD  -10.0      // -150
 
 #define ADJUST_UPPER 0.0
 #define ADJUST_LOWER  -80.0
