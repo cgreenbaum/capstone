@@ -30,11 +30,19 @@ void setup() {
 }
 
 void loop() {
+  toggle();
+
+  levitationRoutine();
+//  liftoff();
+  Serial.println("");
+}
+
+void levitationRoutine()
+{
   // define variables
   static float  controlvalue    = 0;
   static float  distance        = 0;
-
-  toggle();
+  
   distance      = readDistance();
   controlvalue  = controller(distance);
   electromagnetDrive(electromagnetLinearization(controlvalue));

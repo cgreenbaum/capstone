@@ -1,15 +1,15 @@
-#define LEVITATION_TARGET   49.0  // 44.0mm   // 50.0
+#define LEVITATION_TARGET   48.0  // 44.0mm   // 50.0
 
 #define SAMPLEFREQ 120.0
 
 #define MEMORY        2.0         // 2.0   // 3.0 
 #define THRESHOLD     0.25
 #define DELTA         0.15
-#define CONTROLBIAS   33
+#define CONTROLBIAS   -20
 
-#define Kp  -1.0                  // 10    // 7.0
-#define Ki  -5.0                  // 20   // 14.0
-#define Kd  -10.0                 // 40   // 28.0
+#define Kp  -10.0                  // 10    // 7.0
+#define Ki  -20.0                  // 20   // 14.0
+#define Kd  -40.0                 // 40   // 28.0
 
 
 float controller(float distance) {
@@ -19,11 +19,14 @@ float controller(float distance) {
   static float  hError = 0;
   static float  controlvalue = 0;
   static long   levPower = 0;
-  
+  /*
   if(distance > LEVITATION_TARGET)
     hError =  pow((distance - LEVITATION_TARGET), 2);
   else  
     hError = -pow((distance - LEVITATION_TARGET), 2);
+  */
+
+  hError   = distance - LEVITATION_TARGET;
 
   dutyKp   = hError*Kp;
   dutyKd   = (distance - lastDistance)*Kd;

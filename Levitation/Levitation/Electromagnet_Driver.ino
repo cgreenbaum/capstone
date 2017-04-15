@@ -3,8 +3,12 @@
 
 void electromagnetDrive(int duty) {
   static bool magPol = REPEL;
-  if(PRINTDIAGNOSTICS & MAGNETSTATS)
+  
+  if(PRINTDIAGNOSTICS & MAGNETSTATS) {
     Serial.print("d%: ");
+    analogWrite(10, 128 + 0.5*duty);
+  }
+  
   if(duty < 0) {
     duty = -duty;
     magPol = ATTRACT;
