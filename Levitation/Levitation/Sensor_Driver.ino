@@ -1,5 +1,5 @@
 #define CALIBRATION 59.55 // millimeters
-#define READS 80
+#define READS 5
 
 float readDistance() {
   static float distance, accumulator;
