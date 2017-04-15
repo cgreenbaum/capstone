@@ -11,5 +11,7 @@ int electromagnetLinearization(float powerSetting)
 
   index = (100 + (int)powerSetting);
 
+  analogWrite(10, 128 + 1.28*powerSetting);
+
   return duty = iLookup[index];
 }

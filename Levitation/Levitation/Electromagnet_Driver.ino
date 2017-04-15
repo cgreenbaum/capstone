@@ -6,7 +6,7 @@ void electromagnetDrive(int duty) {
   
   if(PRINTDIAGNOSTICS & MAGNETSTATS) {
     Serial.print("d%: ");
-    analogWrite(10, 128 + 0.5*duty);
+//    analogWrite(10, 128 + 0.5*duty);
   }
   
   if(duty < 0) {
