@@ -21,12 +21,15 @@ int liftoff() {
     }
   }
 
+  electromagnetDrive(255);
+
   if(PRINTDIAGNOSTICS) {
+    Serial.println(""); 
     Serial.println("Offblast at: ");
     Serial.print(  "Levpower = "); Serial.println(levPower);
     Serial.print(  "Duty     = "); Serial.println(electromagnetLinearization(levPower));
   }
-
+  
   delay(10000);
 
   return levPower;
