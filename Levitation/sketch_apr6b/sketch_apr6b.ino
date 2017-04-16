@@ -51,9 +51,11 @@ void loop() {
   flipflop = !flipflop;
   digitalWrite(TOGGLE, LOW);
 
-  dutyKp   = (distance - LEVITATION_TARGET)*Kp;
-  dutyKd   = (distance - lastDistance)*Kd;
-  integrator += (distance - LEVITATION_TARGET)/SAMPLEFREQ;
+  hError = distance - levitation_target;
+
+  dutyKp   = hError*Kp;
+  dutyKd   = (distance-lastDistance)*Kd;
+  integrator += hError/SAMPLEFREQ;
 
   if(integrator > MEMORY)
     integrator = MEMORY;
