@@ -8,16 +8,19 @@
 #define ATTRACT HIGH
 #define READS 80
 
-#define LEVITATION_TARGET 44.0 // 44.0mm   // 50.0
+#define LEVITATION_TARGET 52 // 44.0mm   // 50.0
 #define SAMPLEFREQ 120.0
 #define MEMORY 2.0  // 2.0   // 3.0 
 #define THRESHOLD 0.5
 #define DELTA 15
 #define BIAS 0
 
-#define Kp 10.0    // 10    // 7.0
-#define Ki 20.0    // 20   // 14.0
-#define Kd 40.0    // 40   // 28.0
+#define KP 11.68    // 10    // 7.0
+#define KI 21.0    // 20   // 14.0
+#define KD 37.0    // 40   // 28.0
+
+#define ADJUST_UPPER 30.0
+#define ADJUST_LOWER 10.0
 
 #define KpSTART 8
 #define KpMAX 30
