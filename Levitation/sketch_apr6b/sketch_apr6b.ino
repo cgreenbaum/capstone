@@ -173,6 +173,8 @@ int powerLookup(float powerSetting)
 
   index = (100 + (int)powerSetting);
 
+  analogWrite(10, 128 + 1.27*powerSetting);
+
   return duty = iLookup[index];
 }
 
