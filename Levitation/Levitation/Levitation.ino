@@ -4,6 +4,8 @@
 #define DIRA 4
 #define POSA 0
 
+#define LEVITATION_TEST 1
+
 #define PRINTDIAGNOSTICS 1
   #define MAGNETSTATS 1
   #define PIDSTATS    1
@@ -32,8 +34,10 @@ void setup() {
 void loop() {
   toggle();
 
-  levitationRoutine();
-//  liftoff();
+  if(!LEVITATION_TEST)
+    levitationRoutine();
+  else
+    liftoff();
   Serial.println("");
 }
 
