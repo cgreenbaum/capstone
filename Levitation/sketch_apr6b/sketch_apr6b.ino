@@ -147,20 +147,19 @@ void electromagnet(int duty) {
   analogWrite(PWMA, duty);
 }
 
+#define FILTERSHIFT 4
+
 float readDistance() {
-  static float distance, accumulator;
+  static int  filter_input=0;
+  static long filter_reg  =0;
+  static long sensorValue =0;
+  static float  distance  =0;
+  filter_input = analogRead(POSA);
 
-  accumulator = 0;
-  for(int i=0; i<READS; i++) {
-    distance = CALIBRATION / (5.0/1024.0*analogRead(POSA));
-    accumulator += distance;
-  }
+  filter_reg  = filter_reg - (filter_reg >> FILTERSHIFT) + filter_input;
+  sensorValue = filter_reg >> FILTERSHIFT;
 
-  distance = accumulator / READS;
-
-//  distance = CALIBRATION / (5.0/1024.0*analogRead(POSA));
-
-  return distance;
+  return distance = CALIBRATION * 204.8 / sensorValue;
 }
 
 int powerLookup(float powerSetting)
