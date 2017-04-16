@@ -39,9 +39,15 @@ void loop() {
   static float distance = 0;
   static float lastDistance = 0;
   static float integrator = 0;
-  static float dutyKp, dutyKi, dutyKd;
+  static float dutyKp, dutyKi, dutyKd, adjust, Kp, Kd, Ki, bias, levitation_target, hError;
   static bool flipflop = false;
   static long i = 0;
+
+  bias = BIAS;
+  levitation_target = LEVITATION_TARGET;
+  Kp = KP;
+  Ki = KI;
+  Kd = KD;
 
   digitalWrite(TOGGLE, HIGH);
 
@@ -75,7 +81,25 @@ void loop() {
 
   electromagnet(powerLookup(duty));
 
-  Serial.print(distance - LEVITATION_TARGET);
+  adjust = ADJUST_LOWER + (ADJUST_UPPER-ADJUST_LOWER)*(analogRead(1)/1024.0);
+
+  Serial.print("Kp: ");
+  Serial.print(Kp);
+  Serial.print(" ");    
+  Serial.print("Ki: ");
+  Serial.print(Ki);
+  Serial.print(" ");    
+  Serial.print("Kd: ");
+  Serial.print(Kd);
+  Serial.print(" "); 
+  Serial.print("Bias: ");
+  Serial.print(bias);
+  Serial.print(" ");
+  Serial.print("dH: ");
+  Serial.print(hError);
+  Serial.print(" ");
+  Serial.print("lev: ");
+  Serial.print(levitation_target);
   Serial.print(" ");
   Serial.print("D: ");
   Serial.print(distance);
